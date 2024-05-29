@@ -22,8 +22,8 @@ def set_prompt(state, prompt):
 def generate_image(prompt):
     response = openai.Image.create(
         prompt=prompt,
-        model="text-dalle-003",  # DALL-E 모델
-        num_images=1  # 생성할 이미지 수
+        model="text-dalle-003", 
+        num_images=1  
     )
     image_url = response.images[0].url
     image = Image.open(requests.get(image_url, stream=True).raw)
