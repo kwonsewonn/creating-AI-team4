@@ -3,7 +3,7 @@ import openai
 from PIL import Image
 import requests
 
-openai.api_key = ""
+openai.api_key = "YOUR_OPENAI_API_KEY"
 
 # 세션 상태 클래스 정의
 class SessionState:
@@ -38,12 +38,11 @@ def send_message(state, message):
         return "Please start the chat first."
 
 # 이미지 생성 함수 정의
-@st.cache(allow_output_mutation=True)
-def generate_image(prompt):
+def generate_image(prompt, model="dall-e-3"):
     response = openai.Image.create(
         prompt=prompt,
-        model="text-dalle-003", 
-        num_images=1  
+        model=model,
+        num_images=1
     )
     image_url = response.images[0].url
     image = Image.open(requests.get(image_url, stream=True).raw)
@@ -51,7 +50,7 @@ def generate_image(prompt):
 
 # 메인 함수 정의
 def main():
-    st.title('DALL-E Image Generator')
+    st.title('OpenAI Chatbot with Image Generator')
 
     # 세션 상태 초기화
     if 'state' not in st.session_state:
@@ -71,6 +70,16 @@ def main():
             st.session_state.state.prompt = prompt
             image = generate_image(prompt)
             st.image(image, caption='Generated Image', use_column_width=True)
+
+    # Code Interpreter 기능 추가
+    code_input = st.text_area("Input your code here:")
+    if st.button("Run Code"):
+        code_output = openai.Completion.create(
+            engine="davinci-codex",
+            prompt=code_input,
+            max_tokens=100
+        )
+        st.code(code_output.choices[0].text)
 
     # 챗봇 기능 추가
     st.title("OpenAI Assistant Chatbot")
