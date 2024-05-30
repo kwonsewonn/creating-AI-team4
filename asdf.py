@@ -69,6 +69,7 @@ class ConversationThread:
     def get_latest_message(self):
         return self.messages[-1] if self.messages else None
 
+# 대화 스레드 생성
 conversation_thread = ConversationThread()
 
 # OpenAI Assistant 생성
@@ -81,7 +82,7 @@ assistant = openai.Assistant.create(
 st.title("OpenAI Assistant 챗봇")
 
 # 사용자 입력 받기
-user_input = st.text_area("사용자 입력")
+user_input = st.text_input("사용자 입력")
 
 # 사용자 입력을 스레드에 추가
 if st.button("전송"):
