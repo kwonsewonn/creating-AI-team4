@@ -53,3 +53,45 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+class ConversationThread:
+    def __init__(self):
+        self.messages = []
+
+    def add_message(self, message):
+        self.messages.append(message)
+
+    def clear_messages(self):
+        self.messages = []
+
+    def get_latest_message(self):
+        return self.messages[-1] if self.messages else None
+
+#chat 페이지 작성
+conversation_thread = ConversationThread()
+
+assistant = openai.Assistant.create(
+    model="gpt-4o",
+    messages=conversation_thread.messages
+)
+
+st.title("OpenAI Assistant 챗봇")
+user_input = st.text_input("사용자 입력")
+
+if st.button("전송"):
+    conversation_thread.add_message({"role": "user", "content": user_input})
+
+if st.button("Run"):
+    assistant.append_message(user_input)
+    assistant_response = assistant.message()
+    conversation_thread.add_message({"role": "assistant", "content": assistant_response["choices"][0]["message"]["content"]})
+    st.write("Assistant:", assistant_response["choices"][0]["message"]["content"])
+
+if st.button("Clear"):
+    conversation_thread.clear_messages()
+    assistant.reset()
+
+if st.button("대화 종료"):
+    conversation_thread = None
+    assistant = None
