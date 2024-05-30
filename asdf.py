@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 from PIL import Image
+openai.api_key = ""
 
 class SessionState:
     def __init__(self):
@@ -68,30 +69,37 @@ class ConversationThread:
     def get_latest_message(self):
         return self.messages[-1] if self.messages else None
 
-#chat 페이지 작성
 conversation_thread = ConversationThread()
 
+# OpenAI Assistant 생성
 assistant = openai.Assistant.create(
     model="gpt-4o",
     messages=conversation_thread.messages
 )
 
+# 사용자 입력/응답 UI
 st.title("OpenAI Assistant 챗봇")
-user_input = st.text_input("사용자 입력")
 
+# 사용자 입력 받기
+user_input = st.text_area("사용자 입력")
+
+# 사용자 입력을 스레드에 추가
 if st.button("전송"):
     conversation_thread.add_message({"role": "user", "content": user_input})
 
+# 대화 실행 및 응답 출력
 if st.button("Run"):
     assistant.append_message(user_input)
     assistant_response = assistant.message()
     conversation_thread.add_message({"role": "assistant", "content": assistant_response["choices"][0]["message"]["content"]})
-    st.write("Assistant:", assistant_response["choices"][0]["message"]["content"])
+    st.text_area("Assistant 응답", value=assistant_response["choices"][0]["message"]["content"])
 
+# Clear 버튼
 if st.button("Clear"):
     conversation_thread.clear_messages()
     assistant.reset()
 
+# 대화 종료 버튼
 if st.button("대화 종료"):
     conversation_thread = None
     assistant = None
