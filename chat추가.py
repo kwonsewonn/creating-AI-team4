@@ -74,8 +74,8 @@ if "messages" not in st.session_state:
  st.session_state.messages = [] 
 # 저장한 메시지 사용자/응답 구분해서 보여주기
 for msg in st.session_state.messages: 
- with st.chat_message(msg["role"]): 
- st.markdown(msg["content"])
+     with st.chat_message(msg["role"]): 
+         st.markdown(msg["content"])
 
 
 if prompt := st.chat_input("What is up?"): 
