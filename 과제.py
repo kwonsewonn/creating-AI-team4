@@ -1,3 +1,7 @@
+import streamlit as st
+import openai
+
+# OpenAI API 키 설정 (환경 변수 또는 직접 입력)
 openai.api_key = 'YOUR_OPENAI_API_KEY'
 
 def recommend_food_via_openai(cuisine, ingredient, spicy, dietary_restriction):
@@ -11,13 +15,15 @@ def recommend_food_via_openai(cuisine, ingredient, spicy, dietary_restriction):
     추천 음식:
     """
     
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "당신은 요리 추천사입니다."},
+            {"role": "user", "content": prompt}
+        ]
     )
     
-    recommendation = response.choices[0].text.strip()
+    recommendation = response.choices[0].message['content'].strip()
     return recommendation
 
 def main():
