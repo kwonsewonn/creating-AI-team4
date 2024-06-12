@@ -1,41 +1,24 @@
-import streamlit as st
+openai.api_key = 'YOUR_OPENAI_API_KEY'
 
-def recommend_food(cuisine, ingredient, spicy, dietary_restriction):
-    if cuisine == "한식":
-        if ingredient == "고기":
-            if spicy == "네":
-                if dietary_restriction == "상관없음":
-                    return "매운 돼지 불고기를 추천합니다!"
-                elif dietary_restriction == "채식":
-                    return "채식 가능한 불고기 버섯볶음을 추천합니다!"
-            elif spicy == "아니오":
-                return "갈비찜을 추천합니다!"
-        elif ingredient == "채소":
-            return "비빔밥을 추천합니다!"
-    elif cuisine == "중식":
-        if ingredient == "생선":
-            return "탕수어를 추천합니다!"
-        elif ingredient == "채소":
-            return "마파두부를 추천합니다!"
-    elif cuisine == "일식":
-        if ingredient == "생선":
-            if spicy == "네":
-                return "스파이시 참치 롤을 추천합니다!"
-            else:
-                return "사시미를 추천합니다!"
-    elif cuisine == "양식":
-        if ingredient == "고기":
-            if spicy == "네":
-                return "스파이시 치킨 윙을 추천합니다!"
-            else:
-                return "스테이크를 추천합니다!"
-        elif ingredient == "채소":
-            if dietary_restriction == "채식":
-                return "그린 샐러드를 추천합니다!"
-            else:
-                return "채소 라자냐를 추천합니다!"
+def recommend_food_via_openai(cuisine, ingredient, spicy, dietary_restriction):
+    prompt = f"""
+    나는 당신의 요리 추천사입니다. 다음 조건에 맞는 음식을 추천해 주세요.
+    - 요리 종류: {cuisine}
+    - 특정한 재료: {ingredient}
+    - 매운 음식 선호 여부: {spicy}
+    - 식이 제한: {dietary_restriction}
+
+    추천 음식:
+    """
     
-    return "요청하신 조건에 맞는 음식을 찾지 못했습니다. 다른 조건을 시도해 주세요."
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=150
+    )
+    
+    recommendation = response.choices[0].text.strip()
+    return recommendation
 
 def main():
     st.title("음식 추천 프로그램")
@@ -53,8 +36,8 @@ def main():
     dietary_restriction = st.selectbox("특정한 식이 제한이 있으신가요?", ["상관없음", "채식", "글루텐 프리"])
 
     if st.button("음식 추천 받기"):
-        recommendation = recommend_food(cuisine, ingredient, spicy, dietary_restriction)
-        st.write(recommendation)
+        recommendation = recommend_food_via_openai(cuisine, ingredient, spicy, dietary_restriction)
+        st.write("추천 음식:", recommendation)
 
 if __name__ == "__main__":
     main()
