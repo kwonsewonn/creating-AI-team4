@@ -3,4 +3,4 @@ pandas
 beautifulsoup4 
 geopy  
 folium
-streamlit folium
+streamlit-folium
