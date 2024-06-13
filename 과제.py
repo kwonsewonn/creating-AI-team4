@@ -1,5 +1,3 @@
-pip install streamlit openai requests beautifulsoup4 geopy folium streamlit-folium
-
 import streamlit as st
 import openai
 import requests
