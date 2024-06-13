@@ -1,3 +1,5 @@
 openai
 pandas
-streamlit openai requests beautifulsoup4 geopy folium streamlit-folium
+beautifulsoup4 
+geopy  
+folium
