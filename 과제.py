@@ -81,5 +81,6 @@ if st.button("start"):
    
     for msg in thread_messages.data:
       st.markdown(f"{msg.role}: {msg.content[0].text.value}")
+
    
 
