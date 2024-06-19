@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def draw(prompt):
-    response = client.images.generate(model="dall-e-3",prompt= prompt)
+    response = client.images.generate(model="dall-e-3", prompt=prompt)
     image_url = response.data[0].url
     image = f"![alt text]({image_url})"
     return image
